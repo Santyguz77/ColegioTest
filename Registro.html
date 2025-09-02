@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Reconocimientos</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            margin: 0;
+            background: #f7f7fa;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+        .container {
+            margin-top: 0;
+        }
+        .titulo {
+            text-align: center;
+            color: #fdffff;
+            margin: 0 0 20px 0;
+        }
+        #login-container {
+            margin: 40px auto 20px auto;
+            padding: 24px 32px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            max-width: 320px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #login-form {
+            width: 100%;
+        }
+        #login-form label {
+            display: block;
+            margin-bottom: 14px;
+            font-weight: 500;
+            color: #2a3d66;
+            text-align: left;
+        }
+        #login-form input {
+            padding: 7px 10px;
+            border-radius: 6px;
+            border: 1px solid #bfc8e0;
+            margin-top: 4px;
+            width: 90%;
+            box-sizing: border-box;
+        }
+        #login-form button {
+            background: #2a3d66;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 24px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 16px;
+            width: 100%;
+        }
+        #login-form button:hover {
+            background: #1a2847;
+        }
+        #login-error {
+            margin-top: 10px;
+            color: #d32f2f;
+            font-weight: 500;
+            text-align: center;
+        }
+        #registros-container {
+            margin: 30px auto;
+            max-width: 900px;
+        }
+        .tabla-registros {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            background: #fff;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .tabla-registros th, .tabla-registros td {
+            padding: 12px 8px;
+            text-align: center;
+        }
+        .tabla-registros th {
+            background: #2a3d66;
+            color: #fff;
+            font-weight: 600;
+        }
+        .tabla-registros tr:nth-child(even) {
+            background: #f0f4fa;
+        }
+        .tabla-registros tr:first-child th:first-child {
+            border-top-left-radius: 10px;
+        }
+        .tabla-registros tr:first-child th:last-child {
+            border-top-right-radius: 10px;
+        }
+        .tabla-registros tr:last-child td:first-child {
+            border-bottom-left-radius: 10px;
+        }
+        .tabla-registros tr:last-child td:last-child {
+            border-bottom-right-radius: 10px;
+        }
+        #volver-btn {
+            position: fixed;
+            left: 20px;
+            bottom: 20px;
+            z-index: 1000;
+            text-decoration: none;
+        }
+        #volver-btn button {
+            padding: 10px 20px;
+            border-radius: 8px;
+            background: #1976d2;
+            color: #fff;
+            border: none;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            cursor: pointer;
+        }
+        #volver-btn button:hover {
+            background: #1565c0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container"></div>
+    <h1 class="titulo">Registros de Reconocimiento Facial</h1>
+    <div id="login-container">
+        <form id="login-form" autocomplete="off">
+            <label for="usuario">Usuario:
+                <input type="text" id="usuario" required>
+            </label>
+            <label for="contrasena">Contraseña:
+                <input type="password" id="contrasena" required>
+            </label>
+            <button type="submit">Ingresar</button>
+        </form>
+        <div id="login-error" style="display:none;">Usuario o contraseña incorrectos</div>
+    </div>
+    <div id="registros-container" style="display:none;">
+        <table id="tabla-registros" class="tabla-registros">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Correo</th>
+                    <th>Número</th>
+                    <th>Acudientes</th>
+                    <th>Fecha</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    <script>
+        const USUARIO = "admin";
+        const CONTRASENA = "1234";
+        const loginForm = document.getElementById("login-form");
+        const loginError = document.getElementById("login-error");
+        const registrosContainer = document.getElementById("registros-container");
+        loginForm.addEventListener("submit", function(e) {
+            e.preventDefault();
+            const usuario = document.getElementById("usuario").value;
+            const contrasena = document.getElementById("contrasena").value;
+            if (usuario === USUARIO && contrasena === CONTRASENA) {
+                document.getElementById("login-container").style.display = "none";
+                registrosContainer.style.display = "block";
+                mostrarRegistros();
+            } else {
+                loginError.style.display = "block";
+            }
+        });
+
+        function mostrarRegistros() {
+            const registros = JSON.parse(localStorage.getItem("registrosReconocimiento") || "[]");
+            const tbody = document.querySelector("#tabla-registros tbody");
+            tbody.innerHTML = "";
+            registros.forEach(reg => {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td>${reg.nombre}</td>
+                    <td>${reg.correo}</td>
+                    <td>${reg.numero}</td>
+                    <td>${reg.acudientes}</td>
+                    <td>${reg.fecha}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+    </script>
+    <!-- Botón fijo para volver -->
+    <a href="Reconocimiento.html" id="volver-btn">
+        <button type="button">
+            Volver a Reconocimiento
+        </button>
+    </a>
+</body>
+</html>
