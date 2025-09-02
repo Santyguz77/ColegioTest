@@ -110,7 +110,7 @@
             const classPrediction = className + ": " + prob.toFixed(2);
             labelContainer.childNodes[i].innerHTML = classPrediction;
 
-            if (prob >= 0.99 && personasInfo[className] && !infoMostrada) {
+            if (prob >= 0.95 && personasInfo[className] && !infoMostrada) {
                 labelContainer.childNodes[i].innerHTML +=
                     `<br><strong>Correo:</strong> ${personasInfo[className].correo}` +
                     `<br><strong>Número:</strong> ${personasInfo[className].numero}` +
@@ -166,4 +166,5 @@
 
 </body>
 </html>
+
 
